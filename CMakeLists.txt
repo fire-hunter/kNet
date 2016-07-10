@@ -14,7 +14,8 @@
 
 # Modified by Lasse Oorni and Yao Wei Tjong for Urho3D
 
-set (TARGET_NAME kNet)
+cmake_minimum_required(VERSION 3.5)
+project(kNet VERSION 2.7.0)
 
 file (GLOB kNetSourceFiles src/*.cpp)
 file (GLOB kNetHeaderFiles include/*.h include/kNet/*.h include/kNet/*.inl)
@@ -61,10 +62,27 @@ set (SOURCE_FILES ${kNetSourceFiles} ${kNetHeaderFiles})
 # Define dependency libs
 set (INCLUDE_DIRS include)
 
-# Setup target
-setup_library ()
+include_directories("${INCLUDE_DIRS}")
+add_library(kNet "${SOURCE_FILES}")
+
+set(targets_export_name "${PROJECT_NAME}Targets")
+set(include_install_dir "include")
+
+install(
+  TARGETS kNet
+  EXPORT "${targets_export_name}"
+  LIBRARY DESTINATION "lib"
+  ARCHIVE DESTINATION "lib"
+  RUNTIME DESTINATION "bin"
+  INCLUDES DESTINATION "${include_install_dir}"
+  )
 
 # Install headers for building and using the Urho3D library (install dependency for Urho3D/Network/Connection.h and Urho3D/Network/Network.h)
-install_header_files (DIRECTORY include/kNet/ DESTINATION ${DEST_INCLUDE_DIR}/ThirdParty/kNet FILES_MATCHING PATTERN *.h *.inl USE_FILE_SYMLINK)     # Note: the trailing slash is significant
+install(
+  DIRECTORY include/kNet/
+  DESTINATION ${include_install_dir} FILES_MATCHING PATTERN *.h)
+# Note: the trailing slash is significant
 file (GLOB kNetHeaderFiles include/*.h)
-install_header_files (FILES ${kNetHeaderFiles} DESTINATION ${DEST_INCLUDE_DIR}/ThirdParty/kNet)
+install (
+  FILES ${kNetHeaderFiles}
+  DESTINATION ${include_install_dir})
