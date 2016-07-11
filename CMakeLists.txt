@@ -93,14 +93,9 @@ install(
   RUNTIME DESTINATION "bin"
   INCLUDES DESTINATION "${include_install_dir}/kNet"
   )
-file (GLOB kNetTopLevelHeaderFiles include/*.h)
 install (
-  FILES ${kNetTopLevelHeaderFiles}
+  DIRECTORY include/
   DESTINATION ${include_install_dir}/)
-
-install (
-  FILES ${kNetHeaderFiles}
-  DESTINATION ${include_install_dir}/kNet)
 
 install(
   FILES "${project_config}" "${version_config}"
