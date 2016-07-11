@@ -16,7 +16,6 @@
 
 cmake_minimum_required(VERSION 3.5)
 project(kNet VERSION 2.7.0)
-
 file (GLOB kNetSourceFiles src/*.cpp)
 file (GLOB kNetHeaderFiles include/*.h include/kNet/*.h include/kNet/*.inl)
 
@@ -55,15 +54,10 @@ if (WIN32)
         set_source_files_properties (${srcFile} PROPERTIES COMPILE_FLAGS "-DDEBUG_CPP_NAME=\"\\\"${baseName}\"\\\"")
     endforeach ()
 endif ()
-
-# Define source files
-set (SOURCE_FILES ${kNetSourceFiles} ${kNetHeaderFiles})
-
-# Define dependency libs
 set (INCLUDE_DIRS include)
 
 include_directories("${INCLUDE_DIRS}")
-add_library(kNet "${SOURCE_FILES}")
+add_library(${PROJECT_NAME} "${kNetSourceFiles}")
 
 set(config_install_dir "lib/cmake/${PROJECT_NAME}")
 set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
@@ -86,21 +80,17 @@ configure_package_config_file(
   )
 
 install(
-  TARGETS kNet
+  TARGETS ${PROJECT_NAME}
   EXPORT "${targets_export_name}"
   LIBRARY DESTINATION "lib"
   ARCHIVE DESTINATION "lib"
   RUNTIME DESTINATION "bin"
-  INCLUDES DESTINATION "${include_install_dir}/kNet"
+  INCLUDES DESTINATION "${include_install_dir}/${PROJECT_NAME}"
   )
-install (
-  DIRECTORY include/
-  DESTINATION ${include_install_dir}/)
 
-install(
-  FILES "${project_config}" "${version_config}"
-  DESTINATION "${config_install_dir}"
-  )
+install (
+  FILES ${kNetHeaderFiles} ${kNetUnixHeaderFiles} ${kNetWin32HeaderFiles}
+  DESTINATION ${include_install_dir}/${PROJECT_NAME})
 
 install(
   EXPORT "${targets_export_name}"
